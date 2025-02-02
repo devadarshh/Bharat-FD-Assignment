@@ -1,121 +1,160 @@
-Multilingual FAQ Management System
-This project implements a multilingual FAQ management system using Django, providing a robust backend with features such as WYSIWYG editor support, multilingual translations, caching, and REST API endpoints.
+BharatFD Back-End
+A robust backend application for managing multilingual FAQs using Node.js, Express.js, MongoDB, and Redis, with a WYSIWYG editor for rich content formatting.
 
+Project Structure
+pgsql
+Copy
+Edit
+├── config  
+│   ├── db.js  
+│   └── redis.js  
+├── controllers  
+│   └── faqController.js  
+├── middleware  
+│   ├── cache.js  
+│   ├── rateLimit.js  
+│   ├── translator.js  
+│   └── validate.js  
+├── models  
+│   └── faq.js  
+├── routes  
+│   └── faqRoutes.js  
+├── tests  
+│   └── faq.test.js  
+├── utils  
+│   └── logger.js  
+├── .env  
+├── index.js  
+└── README.md  
 Features
-FAQ Management
-
-Create, retrieve, update, and delete FAQs.
-Rich text formatting for answers using django-ckeditor.
-Multilingual Support
-
-Store and manage translations for FAQs.
-Dynamically retrieve content in the requested language using query parameters.
-Caching
-
-Implemented using Redis to enhance performance.
-Translation Automation
-
-Uses Google Translate API or googletrans for automatic translations during FAQ creation.
-Admin Panel
-
-User-friendly interface for managing FAQs and translations.
-API Endpoints
-
-RESTful APIs to interact with the FAQ data efficiently.
-Unit Testing
-
-Comprehensive test suite using pytest to ensure code quality.
-Installation
-Prerequisites
-Python 3.9 or above
-Redis
-PostgreSQL/MySQL (or any preferred database)
-Google Translate API Key (if using Google Translate)
-Steps
-Clone the Repository
-
+WYSIWYG Editor using react-quill
+Multilingual FAQs with automated translation using Google Translate API
+Caching with Redis for faster API responses
+RESTful API for FAQ management
+Secure API with input validation and rate limiting
+Admin-friendly interface for FAQ content management
+Environment variable configuration
+Unit tests and code quality enforcement
+Installation Steps
+1. Clone the Repository
 bash
 Copy
 Edit
-git clone https://github.com/your-repository/multilingual-faq-system.git
-cd multilingual-faq-system
-Set Up Virtual Environment
-
+git clone https://github.com/Rudragupta-1/BharatFD-Back-End.git
+cd BharatFD-Back-End
+2. Install Dependencies
 bash
 Copy
 Edit
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-Install Dependencies
+npm install
+3. Set Environment Variables
+Create a .env file in the root directory and add the following:
 
+ini
+Copy
+Edit
+PORT=5000
+DB_URI=your_database_uri
+REDIS_URI=your_redis_uri
+GOOGLE_APPLICATION_CREDENTIALS=path_to_your_api_json_file
+4. Start the Server
 bash
 Copy
 Edit
-pip install -r requirements.txt
-Configure Environment Variables Create a .env file in the root directory and add:
-
-env
-Copy
-Edit
-SECRET_KEY=your_secret_key
-DEBUG=True
-DATABASE_URL=your_database_url
-REDIS_URL=your_redis_url
-GOOGLE_TRANSLATE_API_KEY=your_google_translate_api_key
-Run Migrations
-
-bash
-Copy
-Edit
-python manage.py makemigrations
-python manage.py migrate
-Run Development Server
-
-bash
-Copy
-Edit
-python manage.py runserver
-Set Up Redis Ensure Redis is running locally or via a cloud provider.
-
+npm run dev
 API Usage
-Fetch FAQs
-URL: /api/faqs/
-Method: GET
-Query Parameters:
-lang: Language code (e.g., hi for Hindi, bn for Bengali)
-Example:
-bash
-Copy
-Edit
-curl http://localhost:8000/api/faqs/?lang=hi
-Create FAQ
-URL: /api/faqs/
-Method: POST
-Request Body:
+1. POST /api/faqs
+Request:
+
 json
 Copy
 Edit
 {
-  "question": "What is Django?",
-  "answer": "Django is a high-level Python Web framework.",
+  "question": "What is Node.js?",
+  "answer": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine."
+}
+Response:
+
+json
+Copy
+Edit
+{
+  "question": "What is Node.js?",
+  "answer": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.",
+  "_id": "679e2059768081a2150303c0",
+  "createdAt": "2025-02-01T13:23:37.758Z",
   "translations": {
-    "hi": {"question": "डjango क्या है?", "answer": "डjango एक उच्च स्तरीय पायथन वेब फ्रेमवर्क है।"}
+    "hi": {
+      "question": "नोड.जेएस क्या है?",
+      "answer": "Node.js एक जावास्क्रिप्ट रनटाइम है जो क्रोम के V8 जावास्क्रिप्ट इंजन पर बनाया गया है।"
+    },
+    "bn": {
+      "question": "Node.js কি?",
+      "answer": "Node.js হল একটি জাভাস্ক্রিপ্ট রানটাইম যা Chrome-এর V8 জাভাস্ক্রিপ্ট ইঞ্জিনে নির্মিত।"
+    }
   }
 }
+2. GET /api/faqs?lang=hi
+Response:
+
+json
+Copy
+Edit
+[
+  {
+    "_id": "679e2059768081a2150303c0",
+    "question": "नोड.जेएस क्या है?",
+    "answer": "Node.js एक जावास्क्रिप्ट रनटाइम है जो क्रोम के V8 जावास्क्रिप्ट इंजन पर बनाया गया है।"
+  }
+]
+Middleware Descriptions
+Cache Middleware (cache.js): Caches responses for frequently requested data using Redis.
+Rate Limiting Middleware (rateLimit.js): Limits the number of requests to the API.
+Translator Middleware (translator.js): Automates translation of FAQ questions and answers.
+Validation Middleware (validate.js): Ensures required fields are present and correctly formatted.
+Dependencies
+Backend Dependencies
+express: Fast, unopinionated web framework for Node.js
+mongoose: MongoDB object modeling tool
+cors: Enable Cross-Origin Resource Sharing
+dotenv: Environment variable management
+express-rate-limit: Request rate-limiting middleware
+helmet: Security headers
+ioredis: Redis client for caching
+@google-cloud/translate: Google Cloud Translation API
+DevDependencies
+eslint: Linting tool for code quality
+jest: Unit testing framework
+supertest: HTTP assertions for API testing
 Testing
-Run unit tests using:
+Unit Tests: Run using Jest
+bash
+Copy
+Edit
+npm test
+Coverage: Achieved for models and API responses.
+Contributions
+Fork the repository.
+Create a new branch for your feature/bug fix.
+Commit your changes with descriptive messages.
+Push the changes and create a pull request.
+Deployment
+To run the application in Docker:
 
 bash
 Copy
 Edit
-pytest
-Documentation
-Code Quality: Followed PEP8 conventions, checked using flake8.
-Commit Messages: Used conventional commit style (e.g., feat:, fix:, docs:).
-Docker Support: Included Dockerfile and docker-compose.yml for containerized deployment.
-Contribution
-Fork the repository.
-Create a feature branch: git checkout -b feature-name.
-Commit changes: git commit -m "feat: description".
-Push to the branch: git push origin feature-name.
-Submit a pull request.
+docker-compose up --build
+Git Commit Guidelines
+feat: Add new features
+fix: Fix bugs
+docs: Update documentation
+test: Add or improve tests
+Future Improvements
+Add role-based authentication
+Improve caching logic
+Integrate CI/CD for deployment
+Contact
+Author: Adarsh Singh
+Email: imadarshsingh2002@gmail.com
+Phone: +91-8468024985
